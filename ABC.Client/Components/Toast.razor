@@ -1,0 +1,54 @@
+﻿@rendermode InteractiveServer
+
+<!-- Toast.razor -->
+@if (toasts.Any())
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:5">
+        @foreach (var toast in toasts)
+        {
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="1000">
+                <div class="toast-header text-white bg-warning">
+                    <strong class="me-auto">@toast.Title</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    @toast.Message
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<ToastModel> toasts = new List<ToastModel>();
+    private bool showToast { get; set; } = false;
+
+    public async void ShowToast(string title, string message)
+    {
+        var toast = new ToastModel
+            {
+                Title = title,
+                Message = message
+            };
+
+        toasts.Add(toast);
+        showToast = true;
+        await InvokeAsync(StateHasChanged);
+
+        await HideToast();
+    }
+
+    private class ToastModel
+    {
+        public string Title { get; set; }
+        public string Message { get; set; }
+    }
+
+    private async Task HideToast(){
+        Task.Delay(3000);
+        Console.WriteLine("test2");
+
+        showToast = false;
+        await InvokeAsync(StateHasChanged);
+    }
+}

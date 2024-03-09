@@ -1,0 +1,52 @@
+@using ABC.Shared.Models
+@using Layout
+@page "/SupplierList"
+@layout AdminLayout
+
+<PageTitle>ABC - Suppliers</PageTitle>
+
+<section class="container pt-2 pb-5">
+    <div class="row pb-4">
+        <!-- Title -->
+        <div class="col-lg-8 col-sm-12 text-start mb-3 mb-sm-0">
+			<h1 style="color: #223442;"><b>Suppliers</b></h1>
+        </div>
+
+        <!-- New Supplier Button -->
+        <div class="col-lg-2 col-sm-4 text-end mb-3 mb-sm-0">
+            <div class="dropdown d-flex justify-content-center">
+                <a class="btn btn-primary" role="button" href="AddSupplier">
+                    <i class="bi bi-plus-lg"></i> New Supplier
+                </a>
+            </div>
+        </div>
+
+        <!-- Export Button -->
+        <div class="col-lg-2 col-sm-4 text-end mb-3 mb-sm-0">
+            <a href="#" class="btn btn-success">
+                <i class="bi bi-box-arrow-up"></i> Export
+            </a>
+        </div>
+    </div>
+
+    <!-- Supplier Table -->
+    <table id="tblsupplierData" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Email Address</th>
+                <th>Contact Number</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+
+</section>
+
+<script src="/js/supplier.js"></script>
+
+@code{
+    
+}

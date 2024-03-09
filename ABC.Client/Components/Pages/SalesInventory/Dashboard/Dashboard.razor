@@ -1,0 +1,273 @@
+﻿@using ABC.Shared.Models
+@page "/Dashboard"
+
+@using Layout
+@layout AdminLayout
+
+<PageTitle>ABC - Dashboard</PageTitle>
+
+<div class="container pt-1 pb-5 min-height">
+    <div class="row pt-1 pb-4">
+        <div class="col-lg-6 col-sm-12 text-start mb-3 mb-sm-0">
+            <h1 style="color: #223442;"><b>Dashboard</b></h1>
+        </div>
+    </div>
+    <div class="row pb-3">
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner px-3">
+                    <h1>
+                        <b>@totalcustomers</b>
+                    </h1>
+
+                    <p>No. of Customers</p>
+                </div>
+
+                <a class="small-box-footer" href="CustomerIndex">More info</a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner px-3">
+                    <h1>
+                        <b>@unprocessedOrders</b>
+                    </h1>
+                    <p>Orders to Process</p>
+                </div>
+
+                <a class="small-box-footer"  href="Order">More info <i class="bi bi-arrow-right-circle"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner px-3">
+                    <h1>
+						<b>@ordersoutfordelivery</b>
+                    </h1>
+
+                    <p>Orders to Deliver</p>
+                </div>
+
+                <a class="small-box-footer" href="Order">More info <i class="bi bi-arrow-right-circle"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner px-3">
+                    <h1>
+                        <b>@cancelledOrders</b>
+                    </h1>
+
+                    <p>Cancelled Orders</p>
+                </div>
+
+                <a class="small-box-footer" href="Order">More info <i class="bi bi-arrow-right-circle"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pt-2 pb-2">
+        <div class="col-8">
+            <div class="border p-3 pb-5 container shadow">
+                <!--Title-->
+                <div class="pb-2">
+                    <h4 style="color: #223442;"><b>Sales Overview</b></h4>
+                    <hr />
+                </div>
+                <div class=" pb-3">
+                    <canvas id="myChart" salesrevenue="@salesRevenue" costpricetotal="@totalCost" ></canvas>
+                </div>
+
+                <div class="row pt-2 px-3">
+                    <div class="col-6">
+                        <div class="salesbox">
+                            <p>Walkin</p>
+                            <h5 style="color: #223442;"><b>Php</b></h5>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="salesbox">
+                            <p>On-call</p>
+                            <h5 style="color: #223442;"><b>Php</b></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-2 pb-2 px-3">
+                    <div class="col-6">
+                        <div class="salesbox">
+                            <p>Chat-based</p>
+                            <h5 style="color: #223442;"><b>Php</b></h5>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="salesbox">
+                            <p>Website</p>
+                            <h5 style="color: #223442;"><b>Php</b></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="border p-3 pb-5 container shadow">
+                <!--Title-->
+                <div class="pb-2">
+                    <h4 class="col-3" style="color: #223442;"><b>Inventory </b> </h4>
+                    <hr />
+                </div>
+                <div class="row col-10 mx-auto py-2">
+                    <div class="small-box bg-info">
+                        <div class="inner px-3">
+                            <h2>
+                                @totalProducts
+                            </h2>
+                            <p>Product Count</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row col-10 mx-auto py-2">
+                    <div class="small-box bg-success">
+                        <div class="inner px-3">
+                            <h2>
+                                @instock
+                            </h2>
+                            <p>In Stock Products</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row col-10 mx-auto py-2">
+                    <div class="small-box bg-warning ">
+                        <div class="inner px-3">
+                            <h2>
+                                @lowstock
+                            </h2>
+
+                            <p>Low Stock Products</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row col-10 mx-auto py-2">
+                    <div class="small-box bg-danger">
+                        <div class="inner px-3">
+                            <h2>
+                                @outofstock
+                            </h2>
+
+                            <p>Out of Stock Products</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row py-4">
+        <div>
+            <div class="border p-3 container shadow">
+                <!-- Title -->
+                <div class="pb-2">
+                    <h4 style="color: #223442;"><b>Best Selling Items</b></h4>
+                    <hr/>
+                </div>
+                <table class="table table-hover scrollable-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product Name</th>
+                            <th>Qty.</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*foreach (var product in Products)
+                        {
+                            var totalSold = (int)OrderDetails.Where(detail => detail.ProductId == product.Id).Sum(detail => detail.Count);
+                            var totalPrice = OrderDetails
+                            .Where(detail => detail.ProductId == product.Id)
+                            .Sum(detail => detail.Product != null ? (detail.Product.RetailPrice * detail.Count) : 0);
+
+                            <tr>
+                                <td><img src="@product.ImageUrl" alt="Product Image" width="50" height="50"></td>
+                                <td>@product.productName</td>
+                                <td>@totalSold</td>
+                                <td>@String.Format("{0:C}", totalPrice)</td>
+                            </tr>
+                        } *@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="//cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script src="/js/dashboard.js"></script>
+
+@code {
+    private List<Customer> Customers { get; set; } = new();
+    private List<OrderHeader> OrderHeaders { get; set; } = new();
+    private List<Product> Products { get; set; } = new();
+    private List<OrderDetail> OrderDetails { get; set; } = new();
+
+    int totalcustomers;
+    int unprocessedOrders;
+    int ordersoutfordelivery;
+    int cancelledOrders;
+
+    int totalProducts;
+    int instock;
+    int lowstock;
+    int outofstock;
+
+    double salesRevenue;
+    double totalCost;
+
+    
+
+    protected override void OnInitialized()
+    {
+        totalcustomers = Customers.Count;
+        unprocessedOrders = OrderHeaders.Count(o => o.OrderStatus == "To Process");
+        ordersoutfordelivery = OrderHeaders.Count(o => o.OrderStatus == "Deliver Order");
+        cancelledOrders = OrderHeaders.Count(o => o.OrderStatus == "Cancelled");
+
+        totalProducts = Products.Count;
+        instock = Products.Count(p => p.StockQuantity > 0);
+        lowstock = Products.Count(p => p.StockQuantity <= 3); //hardcoded pa yung min stock qty 
+        outofstock = Products.Count(p => p.StockQuantity == 0);
+
+        salesRevenue = OrderHeaders.Count(o => o.PaymentStatus == "Paid");
+        totalCost = Products.Sum(p => p.CostPrice);
+    }
+
+    /*
+        public IActionResult Index()
+        {
+
+
+        var bestSellingProducts = _db.OrderDetails
+        .Include(detail => detail.Product)
+        .GroupBy(detail => detail.Product)
+        .OrderByDescending(group => group.Sum(detail => detail.Count))
+        .Select(group => group.Key)
+        .ToList();
+
+            ViewBag.OrderDetails = _db.OrderDetails.ToList();
+
+
+            return View(bestSellingProducts);
+        }
+    }
+    */
+}
+
+

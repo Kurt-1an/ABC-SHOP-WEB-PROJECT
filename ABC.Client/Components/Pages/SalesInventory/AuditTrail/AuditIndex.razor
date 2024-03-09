@@ -1,0 +1,40 @@
+@using ABC.Shared.Models
+@using Layout
+@page "/AuditTrail"
+@layout AdminLayout
+
+<PageTitle>ABC - Audit Trail</PageTitle>
+
+<section class="container pt-2 pb-5">
+    <div class="row pb-4">
+        <div class="col-lg-8 col-sm-12 text-start mb-3 mb-sm-0">
+            <h1 class="pb-3" style="color: #223442;"><b>Audit Trail</b></h1>
+        </div>
+
+        <!-- Export Button -->
+        <div class="col-lg-4 col-sm-4 text-end mb-3 mb-sm-0">
+            <a href="#" class="btn btn-success" id="btngenerate">
+                <i class="bi bi-box-arrow-up"></i> Export
+            </a>
+        </div>
+    </div>
+
+    <table id="tblData" class="table table-bordered table-striped table-hover " action="width:100%">
+        <thead>
+            <tr>
+                <th>Time Stamp</th>
+                <th>Employee</th>
+                <th>User Role</th>
+                <th>Changes</th>
+                <th>Action</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</section>
+
+<script src="/js/audit.js"></script>
+
+@code{
+    
+}

@@ -1,0 +1,177 @@
+@using ABC.Shared.Models
+@using Layout
+@page "/InventoryReport"
+@layout AdminLayout
+
+<link href="InventoryReport.razor.css" rel="stylesheet" />
+
+<PageTitle>ABC - Inventory Report</PageTitle>
+
+<section class="container pt-2 pb-5">
+    <div class="row pb-1">
+        <div class="col-lg-8 col-sm-12 text-start mb-3 mb-sm-0">
+            <h1 style="color: #223442;"><b>Inventory Report</b></h1>
+        </div>
+        <!-- Export Button -->
+        <div class="col-lg-4 col-sm-4 mb-3 mb-sm-0 text-end">
+            <a href="#" class="btn btn-success" id="btngenerate">
+                <i class="bi bi-box-arrow-up"></i> Export
+            </a>
+        </div>
+    </div>
+    <!--Breadcrumb-->
+    <div class="row pb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Inventory Report</li>
+                <li class="breadcrumb-item"><a href="SalesReport">Sales Report</a></li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row pt-1 pb-2">
+        <div class="col-3">
+            <div class="smallbox">
+                <p>Inventory Value</p>
+                <h2><strong>@invValue</strong></h2>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="smallbox">
+                <p>Product Count</p>
+                <h2><strong>@totalProducts</strong></h2>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="smallbox">
+                <p>Purchase Order Created</p>
+                <h2><strong>@totalPurOrders</strong></h2>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="smallbox">
+                <p>Transferred Stocks</p>
+                <h2><strong>@totalProducts</strong></h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pt-3 pb-2">
+        <div class="col-7">
+            <div class="border p-3 container shadow">
+                <!--Title-->
+                <div class="row">
+                    <h4 style="color: #223442;">Performance</h4>
+                    <hr />
+                </div>
+                <div class="chart2">
+                    <canvas id="inventoryChart"
+                            data-instock-products="@instock"
+                            data-low-stock-products="@lowstock"
+                            data-out-of-stock-products="@outofstock"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="border p-3 container shadow">
+                <!-- Title -->
+                <div class="row">
+                    <h4 style="color: #223442;">Fast-Moving Items</h4>
+                    <hr />
+                </div>
+                <table class="table table-hover scrollable-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product</th>
+                            <th>Quantity Sold</th>
+                        </tr>
+                    </thead>
+                    @* <tbody>
+                        @foreach (var product in Model)
+                        {
+                            var totalSold = (int)orderDetails.Where(detail => detail.ProductId == product.Id).Sum(detail => detail.Count);
+                            var totalPrice = orderDetails
+                            .Where(detail => detail.ProductId == product.Id)
+                            .Sum(detail => detail.Product != null ? (detail.Product.RetailPrice * detail.Count) : 0);
+
+                            <tr>
+                                <td><img src="@product.ImageUrl" alt="Product Image" width="50" height="50"></td>
+                                <td>@product.productName</td>
+                                <td>@totalSold</td>
+                            </tr>
+                        }
+                    </tbody> *@
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="//cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script src="/js/inventoryreport.js"></script>
+
+@code{
+    private List<Product> Products { get; set; }
+    private List<Category> Categories { get; set; }
+    private List<PurchaseOrder> PurchaseOrders { get; set; }
+
+    int totalProducts;
+    int totalCategories;
+    int totalPurOrders;
+    int instock;
+    int lowstock;
+    int outofstock;
+
+    double invValue;
+
+    protected override void OnInitialized()
+    {
+        if (Products != null && Products.Any() &&
+            Categories != null && Categories.Any() &&
+            PurchaseOrders != null && PurchaseOrders.Any())
+        {
+            totalProducts = Products.Count();
+            totalCategories = Categories.Count();
+            totalPurOrders = PurchaseOrders.Count();
+
+            instock = Products.Count(p => p.StockQuantity > 0);
+            lowstock = Products.Count(p => p.StockQuantity > 0 && p.StockQuantity <= 3);
+            outofstock = Products.Count(p => p.StockQuantity == 0);
+
+            invValue = Products.Sum(p => p.CostPrice);
+        }
+        else
+        {
+            totalProducts = 0;
+            totalCategories = 0;
+            totalPurOrders = 0;
+            instock = 0;
+            lowstock = 0;
+            outofstock = 0;
+            invValue = 0;
+        }
+    }
+
+    @*
+        public IActionResult Index()
+        {
+
+            var bestSellingProducts = _db.OrderDetails
+        .Include(detail => detail.Product)
+        .GroupBy(detail => detail.Product)
+	    .OrderByDescending(group => group.Sum(detail => detail.Count))
+	    .Select(group => group.Key)
+	    .ToList();
+
+		    ViewBag.SalesRevenue = salesRevenue;
+		    ViewBag.NumberOfItemsSold = numberOfItemsSold;
+		    ViewBag.Profit = totalProfit;
+		    ViewBag.TotalCostPrice = totalCostPrice;
+		    ViewBag.OrderDetails = _db.OrderDetails.ToList();
+
+		    return View(bestSellingProducts);
+	    }
+    *@
+
+}

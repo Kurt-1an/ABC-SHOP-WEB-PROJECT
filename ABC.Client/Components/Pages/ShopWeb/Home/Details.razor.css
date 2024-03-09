@@ -1,0 +1,8 @@
+﻿.FooterminHeight {
+    min-height: calc(100vh - 395px);
+}
+
+h2, h6, span {
+    color: var(--maincolor-darkblue--);
+    font-weight: bold;
+}

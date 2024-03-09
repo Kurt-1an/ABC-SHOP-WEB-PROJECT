@@ -1,0 +1,207 @@
+@using ABC.Shared.Models
+@using Layout
+@page "/SalesReport"
+@layout AdminLayout
+
+<link href="SalesReport.razor.css" rel="stylesheet" />
+
+<PageTitle>ABC - Sales Report</PageTitle>
+
+<section class="container pt-2 pb-5">
+    <!--TITLE-->
+    <div class="row pb-1">
+        <div class="col-lg-8 col-sm-12 text-start mb-3 mb-sm-0">
+            <h1 style="color: #223442;"><b>Sales Report</b></h1>
+        </div>
+        <!-- Export Button -->
+        <div class="col-lg-4 col-sm-4 mb-3 mb-sm-0 text-end">
+            <a href="#" class="btn btn-success" id="btngenerate">
+                <i class="bi bi-box-arrow-up"></i> Export
+            </a>
+        </div>
+    </div>
+    <!--Breadcrumb-->
+    <div class="row pb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Sales Report</li>
+                <li class="breadcrumb-item"><a href="InventoryReport">Inventory Report</a></li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row pt-1 pb-2">
+        <div class="col-4">
+            <div class="smallbox">
+                <p>Total Sales</p>
+                <h2 style="color: #B5603A;">
+                    <strong>@itemSold</strong>
+                </h2>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="smallbox">
+                <p>Total Revenue</p>
+                <h2 style="color: #305B78;">
+                    <strong>Php @salesRevenue</strong>
+                </h2>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="smallbox">
+                <p>Total Profit</p>
+                <h2 style="color: #146128;">
+                    <strong>Php @totalProfit</strong>
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pt-3 pb-2">
+        <div class="col-7">
+            <div class="border p-3 container shadow">
+                <!--Title-->
+                <div class="row pb-2">
+                    <h4 style="color: #223442;">Revenue</h4>
+                    <hr />
+                </div>
+                <div class="barchart pb-3 px-2">
+                    <canvas id="salesChart" salesRevenue="@salesRevenue"></canvas>
+                </div>
+                
+                <div class="row pt-2">
+                    <div class="col-6">
+                        <div class="smallbox">
+                            <p>Walkin</p>
+                            <h5 style="color: #223442;"><b>Php</b></h5>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="smallbox">
+                            <p>On-call</p>
+                            <h5 style="color: #223442;"><b>Php</b></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-2 pb-3">
+                    <div class="col-6">
+                        <div class="smallbox">
+                            <p>Chat-based</p>
+                            <h5 style="color: #223442;"><b>Php</b></h5>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="smallbox">
+                            <p>Website</p>
+                            <h5 style="color: #223442;"><b>Php</b></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="border p-3 container shadow">
+                <!-- Title -->
+                <div class="row">
+                    <h4 style="color: #223442;">Best Selling Items</h4>
+                    <hr />
+                </div>
+                <table class="table table-hover scrollable-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product</th>
+                            <th>Qty.</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*
+                        @foreach (var product in Model)
+                        {
+                            var totalSold = (int)orderDetails.Where(detail => detail.ProductId == product.Id).Sum(detail => detail.Count);
+                            var totalPrice = orderDetails
+                            .Where(detail => detail.ProductId == product.Id)
+                            .Sum(detail => detail.Product != null ? (detail.Product.RetailPrice * detail.Count) : 0);
+
+                            <tr>
+                                <td><img src="@product.ImageUrl" alt="Product Image" width="50" height="50"></td>
+                                <td>@product.productName</td>
+                                <td>@totalSold</td>
+                                <td>@String.Format("{0:C}", totalPrice)</td>
+                            </tr>
+                        } *@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="//cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script src="/js/salesreport.js"></script>
+
+@code{
+    private List<OrderHeader> OrderHeaders { get; set; }
+    private List<OrderDetail> OrderDetails { get; set; }
+    private List<Product> Products { get; set; }
+
+    double salesRevenue;
+    double totalProfit;
+    int itemSold;
+    double totalCost;
+
+    protected override void OnInitialized()
+    {
+        if (OrderHeaders != null && OrderHeaders.Any() &&
+            OrderDetails != null && OrderDetails.Any() &&
+            Products != null && Products.Any())
+        {
+            salesRevenue = OrderHeaders
+                .Where(order => order.PaymentStatus == "Paid")
+                .Sum(order => order.OrderTotal);
+
+            totalProfit = OrderHeaders
+            .Where(order => order.PaymentStatus == "Paid")
+            .SelectMany(order => OrderDetails.Where(detail => detail.OrderHeaderId == order.Id))
+            .Sum(detail => detail.Product != null ?
+                    (detail.Price - detail.Product.CostPrice) * detail.Count : 0);
+
+            itemSold = OrderHeaders
+            .Where(order => order.PaymentStatus == "Paid")
+            .SelectMany(order => OrderDetails.Where(detail => detail.OrderHeaderId == order.Id))
+            .Sum(detail => detail.Count);
+
+            totalCost = Products.Sum(product => product.CostPrice);
+
+        }
+        else
+        {
+            salesRevenue = 0;
+            totalProfit = 0;
+            itemSold = 0;
+            totalCost = 0;
+        }
+    }
+
+    @*
+        public IActionResult Index()
+        {
+
+            var bestSellingProducts = _db.OrderDetails
+        .Include(detail => detail.Product)
+        .GroupBy(detail => detail.Product)
+	    .OrderByDescending(group => group.Sum(detail => detail.Count))
+	    .Select(group => group.Key)
+	    .ToList();
+
+		    ViewBag.SalesRevenue = salesRevenue;
+		    ViewBag.NumberOfItemsSold = numberOfItemsSold;
+		    ViewBag.Profit = totalProfit;
+		    ViewBag.TotalCostPrice = totalCostPrice;
+		    ViewBag.OrderDetails = _db.OrderDetails.ToList();
+
+		    return View(bestSellingProducts);
+	    }
+    *@
+}

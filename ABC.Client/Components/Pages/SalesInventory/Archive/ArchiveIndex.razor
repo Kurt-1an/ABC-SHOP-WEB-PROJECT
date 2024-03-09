@@ -1,0 +1,34 @@
+@using ABC.Shared.Models
+@using Layout
+@page "/Archives"
+@layout AdminLayout
+
+<PageTitle>ABC - Archive</PageTitle>
+
+<section class="container pt-2 pb-5">
+    <div class="row pb-4">
+        <div class="col-lg-8 col-sm-12 text-start mb-3 mb-sm-0">
+            <h1 class="pb-3" style="color: #223442;"><b>Archive</b></h1>
+        </div>
+
+        <!-- Export Button -->
+        <div class="col-lg-4 col-sm-4 text-end mb-3 mb-sm-0">
+            <a href="#" class="btn btn-success" id="btngenerate">
+                <i class="bi bi-box-arrow-up"></i> Export
+            </a>
+        </div>
+    </div>
+
+    <table id="tblData" class="table table-bordered table-striped table-hover " action="width:100%">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Archived By</th>
+                <th>Filename</th>
+                <th>Reason</th>
+                <th>Source Module/Page</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</section>

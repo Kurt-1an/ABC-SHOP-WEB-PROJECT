@@ -1,0 +1,63 @@
+.min-height {
+    min-height: 33rem;
+}
+
+.banner {
+    background-image: url('image/banner.png');
+    background-position: bottom;
+    background-size: cover;
+    position: relative;
+}
+
+
+.title {
+    margin-top: 2rem;
+}
+
+.button {
+    background-color: var(--maincolor-darkblue--);
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+h1, h2 {
+    color: var(--maincolor-darkblue--);
+    font-weight: bold;
+}
+
+h3, p {
+    color: var(--maincolor-darkblue--);
+    text-align: center;
+}
+
+.min-height-section {
+    min-height: 300px;
+}
+
+.productcard {
+    width: 100%;
+}
+
+    .productcard:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+
+.card-title {
+    color: var(--maincolor-darkblue--);
+    font-weight: 700;
+}
+
+.card-img-overlay {
+    background-color: #ffffff;
+    border: none;
+}
+
+.card .btn-link {
+    background-color: transparent;
+    color: var(--maincolor-darkblue--);
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+}

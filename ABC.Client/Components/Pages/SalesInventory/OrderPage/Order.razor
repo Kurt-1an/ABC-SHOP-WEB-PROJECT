@@ -1,0 +1,134 @@
+@using ABC.Shared.Models.ViewModels
+@using Layout
+@page "/ManageOrderABC"
+@layout AdminLayout
+
+
+<PageTitle>ABC - Manage Orders</PageTitle>
+
+@{
+	//var status = Context.Request.Query["status"];
+
+	var shipped = "text-primary";
+	var inprocess = "text-primary";
+	var completed = "text-primary";
+	var approved = "text-primary";
+	var all = "text-primary";
+
+	/*switch (status)
+		{
+		case "shipped": shipped = "active text-white bg-primary"; break;
+		case "inprocess": inprocess = "active text-white bg-primary"; break;
+		case "completed": completed = "active text-white bg-primary"; break;
+		case "approved": approved = "active text-white bg-primary"; break;
+		case "all": all = "active text-white bg-primary"; break;
+
+		default: all = "active text-white bg-primary"; break;
+			}*/
+
+}
+
+<div class="container pt-2 pb-5">
+	<div class="row pb-2">
+		<!-- Title -->
+		<div class="col-lg-8 col-sm-12 text-start mb-3 mb-sm-0">
+			<h1 style="color: #223442;"><b>Order List</b></h1>
+		</div>
+
+		<!-- Export Button -->
+		<div class="col-lg-4 col-sm-12 text-end">
+			<a href="#" class="btn btn-success">
+				<i class="bi bi-box-arrow-up"></i> Export
+			</a>
+		</div>
+	</div>
+
+	<div class="d-flex justify-content-between pb-3 pt-2">
+		<span></span>
+
+		<ul class="list-group list-group-horizontal-sm">
+			<a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="all">
+			<li class="list-group-item @all">All</li>
+			</a>
+
+			<a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="approved">
+			<li class="list-group-item @approved">To Process</li>
+			</a>
+
+			<a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
+			<li class="list-group-item @inprocess">Processing</li>
+			</a>
+
+			<a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="shipped">
+			<li class="list-group-item @shipped">Out for Delivery</li>
+			</a>
+
+			<a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="completed">
+			<li class="list-group-item @completed">Completed</li>
+			</a>
+		</ul>
+
+	</div>
+
+	<table id="tblData" class="table table-bordered table-striped table-hover " action="width:100%">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Phone Number</th>
+				<th>Email</th>
+				<th>Address</th>
+				<th>Status</th>
+				<th>Total</th>
+				<th></th>
+			</tr>
+		</thead>
+
+
+		@foreach (var order in OrderHeader)
+		{
+			<tr>
+				<th scope="row"> @order.Id </th>
+				<td> @order.ApplicationUser?.FirstName </td>
+				<td> @order.ApplicationUser?.PhoneNumber </td>
+				<td> @order.ApplicationUser?.Email </td>
+				<td> @order.ApplicationUser?.Address, @order.ApplicationUser?.City, @order.ApplicationUser?.Province</td>
+				<td class="text-end"> @order.OrderStatus </td>
+				<td class="text-end"> @order.OrderTotal </td>
+
+				<td class="text-end d-flex justify-content-around">
+					<a class="a-style-none" href="OrderDetails?id=@order.Id">
+						<i class="bi bi-pencil-square text-primary cursor-pointer" title="Process" tabindex="0"></i>
+					</a>
+				</td>
+			</tr>
+
+
+			@for (var i = 0; i < 10 - OrderHeader.Count; i++)
+			{
+				<tr>
+					<th scope="row"> - </th>
+					<td> - </td>
+					<td class="text-end"> - </td>
+					<td class="text-end"> - </td>
+					<td class="text-end"> - </td>
+					<td class="text-end"> - </td>
+				</tr>
+			}
+		}
+		else
+		{
+		@for (var i = 0; i < 10; i++)
+		{
+			<tr>
+				<th scope="row"> - </th>
+				<td> - </td>
+				<td class="text-end"> - </td>
+				<td class="text-end"> - </td>
+				<td class="text-end"> - </td>
+				<td class="text-end"> - </td>
+			</tr>
+		}
+		}
+	</table>
+</div>

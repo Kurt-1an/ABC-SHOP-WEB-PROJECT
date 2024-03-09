@@ -1,0 +1,333 @@
+@using ABC.Shared.Models
+@using Layout
+@page "/ProductUpsert"
+@layout AdminLayout
+
+@rendermode InteractiveServer
+
+
+<section class="container">
+	<EditForm Model="SelectedProduct" OnValidSubmit="SaveProduct" enctype="multipart/form-data">
+		<DataAnnotationsValidator />
+		<ValidationSummary class="text-danger" role="alert" />
+		<InputNumber @bind-Value="SelectedProduct.Id" hidden></InputNumber>
+
+
+		<!--New Product-->
+		<div class="row pt-2 pb-1" id="topbar">
+			<!-- Title -->
+			<div class="col-lg-8 col-sm-12 text-start mb-3 mb-sm-0">
+				<h1 style="color: #223442;"><b>@(SelectedProduct.Id != 0 ? "Edit" : "Create") Product</b></h1>
+			</div>
+
+			<!-- Save Button -->
+			<div class="col-lg-2 col-sm-6 text-end mb-3 mb-sm-0">
+
+				@if (SelectedProduct.Id != 0)
+				{
+					<button class="btn btn-outline-success" data-bs-toggle="modal" type="button" data-bs-target="#UpsertItem">
+						<i class="bi bi-floppy"></i> Update
+					</button>
+				}
+				else
+				{
+					<button class="btn btn-outline-success" type="submit">
+						<i class="bi bi-floppy"></i> Save
+					</button>
+				}
+			</div>
+		</div>
+
+		<!--Breadcrumb-->
+		<div class="row pb-2">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="ProductList">Product List</a></li>
+					<li class="breadcrumb-item active" aria-current="page">@(SelectedProduct.Id != 0 ? "Update" : "Create") List</li>
+				</ol>
+			</nav>
+		</div>
+
+		<!--Product Images-->
+		<div class="row pb-4">
+			<div class="col-12">
+				<div class="border p-3 container shadow">
+					<!--Title-->
+					<div class="row pb-2">
+						<h4 style="color: #223442;"><b>Product Images</b></h4>
+						<hr />
+					</div>
+
+					<!--Product Images-->
+
+					<div class="row">
+						<div class="col-4">
+							<label id="formFileone" class="form-label mt-2"><strong>Product Image</strong> <br /> <span class="text-muted">Upload new image to remove the current image</span> </label>
+							<InputFile OnChange="HandleFileSelected" />
+						</div>
+						<div class="col-8">
+							@if (!string.IsNullOrEmpty(previewImageData))
+							{
+								<img src="@previewImageData" alt="Preview" class="rounded" width="30%" style="border-radius: 5px; border: 1px solid #bbb9b9;">
+							}
+							else if (!string.IsNullOrEmpty(SelectedProduct.ImageUrl))
+							{
+								<img src="@SelectedProduct.ImageUrl" alt="Image" class="rounded" width="30%" style="border-radius: 5px; border: 1px solid #bbb9b9;">
+							}
+							else
+							{
+								<p>No image available</p>
+							}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!--Product Information-->
+		<div class="row pb-3">
+			<div class="col-12">
+				<div class="border p-3 container shadow">
+					<!--Title-->
+					<div class="row pb-2">
+						<h4 style="color: #223442;"><b>Product Information</b></h4>
+						<hr />
+					</div>
+
+					<!--Barcode-->
+					<div class="row">
+						<div class="col-10">
+							<div class="input-group mb-3">
+								<label class="input-group-text" id="BarcodeLabel">Barcode</label>
+								<input @bind-value="SelectedProduct.Barcode" type="text" class="form-control" id="BarcodeInput" aria-describedby="BarcodeLabel">
+							</div>
+						</div>
+					</div>
+
+					<!--Product SKU-->
+					<div class="row">
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="SKU">SKU</label>
+							<input @bind-value="SelectedProduct.SKU" type="text" class="form-control" aria-describedby="SKU">
+						</div>
+					</div>
+
+					<!--Product Name-->
+					<div class="row">
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="productName">Product Name</label>
+							<input @bind-value="SelectedProduct.productName" type="text" class="form-control" aria-describedby="productName">
+						</div>
+					</div>
+
+					<!--Category-->
+					<div class="row">
+						<div class="col-6">
+							<div class="input-group mb-3">
+								<label class="input-group-text" id="Category">Category </label>
+								<select @bind="SelectedProduct.CategoryId" class="form-select" aria-describedby="Category">
+									<option disabled selected>--Select Category--</option>
+									@foreach (var category in CategoryList)
+									{
+										<option value="@category.Id">@category.Name</option>
+									}
+								</select>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="input-group mb-3">
+								<label class="input-group-text" id="Category">Brand </label>
+								<input @bind-value="SelectedProduct.Brand" type="text" class="form-control" aria-describedby="productName">
+
+							</div>
+						</div>
+					</div>
+
+					<!--Supplier & Brand-->
+					<div class="row">
+						<div class="col-6">
+							<div class="input-group mb-3">
+								<label class="input-group-text" id="Supplier">Supplier </label>
+								<select @bind="SelectedProduct.SupplierId" class="form-select" aria-describedby="Category">
+									<option disabled selected>--Select Category--</option>
+									@foreach (var supplier in SupplierList)
+									{
+										<option value="@supplier.Id">@supplier.supplierCompanyName</option>
+									}
+								</select>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="input-group mb-3">
+								<label class="input-group-text" id="Brand">Store</label>
+								<select @bind="SelectedProduct.StoreId" class="form-select" aria-describedby="Store">
+									<option disabled selected>--Select Store--</option>
+									@foreach (var store in StoreList)
+									{
+										<option value="@store.Id">@store.storeName</option>
+									}
+								</select>
+							</div>
+						</div>
+					</div>
+
+
+					<!--Description-->
+					<div class="row">
+						<div class="input-group mb-3">
+							<label class="input-group-text">Description</label>
+							<InputTextArea @bind-Value="SelectedProduct.Description" class="form-control" aria-describedby="Description" required></InputTextArea>
+							<ValidationMessage For="@(() => SelectedProduct.Description)" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--Pricing & Waranty-->
+		<div class="row pt-2 pb-3">
+			<div class="col-6">
+				<!--Pricing-->
+				<div class="border p-3 container shadow">
+					<!--Title-->
+					<div class="row pb-2">
+						<h4 style="color: #223442;"><b>Pricing</b></h4>
+						<hr />
+					</div>
+
+					<!--Cost Price-->
+					<div class="row">
+						<span asp-validation-for="Product.CostPrice" class="text-danger"></span>
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="CostPrice">Cost Price</label>
+							<input @bind-value="SelectedProduct.CostPrice" class="form-control" aria-describedby="CostPrice">
+
+						</div>
+					</div>
+
+					<!--Retail Price-->
+					<div class="row">
+						<span asp-validation-for="Product.RetailPrice" class="text-danger"></span>
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="RetailPrice">Retail Price</label>
+							<input @bind-value="SelectedProduct.RetailPrice" class="form-control" aria-describedby="RetailPrice">
+						</div>
+					</div>
+				</div>
+
+
+				<!--Warranty-->
+				<div class="border p-3 container mt-3 shadow">
+					<div class="row pb-2">
+						<h4 style="color: #223442;"><b>Warranty</b></h4>
+						<hr />
+					</div>
+
+					<!--Type-->
+					<div class="row">
+						<span asp-validation-for="Product.Type" class="text-danger"></span>
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="Type">Type</label>
+							<input @bind-value="SelectedProduct.Type" class="form-control" aria-describedby="Type">
+						</div>
+					</div>
+
+					<!--Duration-->
+					<div class="row">
+						<span asp-validation-for="Product.Duration" class="text-danger"></span>
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="Duration">Duration</label>
+							<input @bind-value="SelectedProduct.Duration" class="form-control" aria-describedby="Duration">
+						</div>
+					</div>
+
+					<!--Provider-->
+					<div class="row">
+						<span asp-validation-for="Product.Provider" class="text-danger"></span>
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="Provider">Provider</label>
+							<input @bind-value="SelectedProduct.Provider" class="form-control" aria-describedby="Provider">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-6 my-auto">
+				<div class="border p-3 container shadow">
+					<!--Title-->
+					<div class="row pb-2">
+						<h4 style="color: #223442;"><b>Inventory</b></h4>
+						<hr />
+					</div>
+
+					<!--Stock Quantity-->
+					<div class="row">
+						<span asp-validation-for="Product.StockQuantity" class="text-danger"></span>
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="StockQuantity">Stock Quantity</label>
+							<input @bind-value="SelectedProduct.StockQuantity" class="form-control" aria-describedby="StockQuantity">
+						</div>
+					</div>
+
+					<!--Min. Stock Quantity-->
+					<div class="row">
+						<span asp-validation-for="Product.MinimumStockQuantity" class="text-danger"></span>
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="inputMinimumStockQuantity">Minimum Stock Quantity</label>
+							<input @bind-value="SelectedProduct.MinimumStockQuantity" class="form-control" aria-describedby="inputMinimumStockQuantity">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!--Additional Notes-->
+		<div class="row pt-3 pb-5">
+			<div class="col-12">
+				<div class="border p-3 container shadow">
+					<!--Title-->
+					<div class="row pb-2">
+						<h4 style="color: #223442;"><b>Additional Notes</b></h4>
+						<hr />
+					</div>
+
+					<!--Description-->
+					<div class="row">
+						<div class="input-group mb-3">
+							<textarea @bind="SelectedProduct.addNotes" class="form-control" style="height: 100px"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</EditForm>
+</section>
+
+<!-- Improved and Styled Modal -->
+<div class="modal fade mt-4" id="UpsertItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header text-dark">
+				<h5 class="modal-title" id="exampleModalLabel">@(SelectedProduct.Id != 0 ? "Edit" : "Create") Product</h5>
+				<button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="mb-3">
+					<span class="fw-bold">Are you sure you want to @(SelectedProduct.Id != 0 ? "Edit" : "Create") this product?</span>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button class="btn btn-danger" @onclick="SaveProduct" type="button" data-bs-dismiss="modal">Confirm</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+

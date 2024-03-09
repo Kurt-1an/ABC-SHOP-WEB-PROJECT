@@ -1,0 +1,139 @@
+@using ABC.Shared.Models.ViewModels
+@page "/Summary"
+@rendermode InteractiveServer
+
+<PageTitle>ABC - Order Summary</PageTitle>
+
+<section class="container mt-3 mb-5 FooterminHeight">
+	<div class="row pt-2 pb-4" id="topbar">
+		<!-- Title -->
+		<div class="col-lg-8 col-md-6 text-start mb-3 mb-sm-0">
+			<h1 class="text">Order Summary</h1>
+		</div>
+		<div class="col-lg-4 text-end my-auto">
+			<a class="btn btn-danger btn-md" href="CartIndex">Back to Cart</a>
+		</div>
+	</div>
+	<EditForm method="post" OnValidSubmit="PlaceOrderHandler" FormName="checkoutFormModel" id="checkoutFormModel" Model="checkoutFormModel">
+		<DataAnnotationsValidator />
+		<div class="card shadow border-1 mb-4">
+			<div class="card-body">
+				<div class="container rounded">
+					<div class="row">
+						<div class="col-12 col-lg-6 pb-4">
+							<div class="row">
+								<div class="row">
+									<h3 class="d-flex justify-content-between align-items-center mb-3">
+										<span class="text">Shipping Details:</span>
+									</h3>
+									<hr />
+								</div>
+								<div class="row my-1">
+									<div class="col-3">
+										<label>First Name</label>
+									</div>
+									<div class="col-9">
+										<input @bind-value="UserInfo.FirstName" class="form-control" disabled/>
+										@* <span class="text-danger">@validationMessage </span> *@
+									</div>
+								</div>
+								<div class="row my-1">
+									<div class="col-3">
+										<label>Last Name</label>
+									</div>
+									<div class="col-9">
+										<input @bind-value="UserInfo.LastName" class="form-control" disabled />
+										@* <span class="text-danger">@validationMessage</span> *@
+									</div>
+								</div>
+								<div class="row my-1">
+									<div class="col-3">
+										<label>Contact No.</label>
+									</div>
+									<div class="col-9">
+										<input @bind-value="UserInfo.PhoneNumber" class="form-control" disabled />
+										@* <span class="text-danger">@validationMessage</span> *@
+									</div>
+								</div>
+								<div class="row my-1">
+									<div class="col-3">
+										<label>Address Line</label>
+									</div>
+									<div class="col-9">
+										<input @bind-value="UserInfo.Address" class="form-control" />
+										@* <span class="text-danger">@validationMessage</span> *@
+									</div>
+								</div>
+								<div class="row my-1">
+									<div class="col-3">
+										<label>City</label>
+									</div>
+									<div class="col-9">
+										<input @bind-value="UserInfo.City" class="form-control" />
+										@* <span class="text-danger"> @validationMessage </span> *@
+									</div>
+								</div>
+								<div class="row my-1">
+									<div class="col-3">
+										<label>Province</label>
+									</div>
+									<div class="col-9">
+										<input @bind-value="UserInfo.Province" class="form-control" />
+										@* <span class="text-danger">@validationMessage</span> *@
+									</div>
+								</div>
+								<div class="row my-1">
+									<div class="col-3">
+										<label>Postal Code</label>
+									</div>
+									<div class="col-9">
+										<input @bind-value="UserInfo.PostalCode" class="form-control" />
+										@* <span class="text-danger">@validationMessage</span> *@
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!--Order Summary-->
+						<div class="col-12 col-lg-6 pb-4">
+							<h3 class="d-flex justify-content-between align-items-center mb-3">
+								<span class="text">Order Summary:</span>
+							</h3>
+							<hr />
+							<ul class="list-group mb-3">
+								@foreach (var cartItem in shoppingCartList)
+								{
+									<li class="list-group-item d-flex justify-content-between">
+										<div>
+											<h6 class="my-0">@cartItem.Product.productName</h6>
+											<small class="text-muted">Quantity: @cartItem.Quantity</small>
+										</div>
+										<span class="text-muted"><b>@((cartItem.Product.RetailPrice * cartItem.Quantity).ToString("#, ###.00"))</b></span>
+									</li>
+								}
+
+								@* <li class="list-group-item d-flex justify-content-between bg-light">
+								<small class="text-black">Total (Php)</small>
+								<strong class="text-info">@shoppingCart.OrderHeader.OrderTotal.ToString("c")</strong>
+								</li> *@
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer">
+				<div class="row">
+					<div class="col-12 col-md-8 pt-2">
+						<p style="color:maroon; font-size:14px;">
+							Estimate Arrival Date:
+							@DateTime.Now.AddDays(2).ToShortDateString() - @DateTime.Now.AddDays(4).ToShortDateString()
+						</p>
+					</div>
+					<div class="col-12 col-md-4">
+						<button type="submit" class="Placebtn form-control" >Place Order</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</EditForm>
+</section>

@@ -1,0 +1,85 @@
+﻿@using ABC.Shared.Models
+@page "/"
+
+<PageTitle>ABC - Home</PageTitle>
+
+<section class="container my-lg-5">
+    <section class="banner rounded text-center my-5 p-5 d-flex align-items-center min-height">
+        <div class="position-relative text-center mx-auto">
+            <h1 class="col-auto text-white">Elevate Your Tech Experience</h1>
+            <p class="col-auto text-white">Discover. Upgrade. Secure.</p>
+            <a href="shop" class="button btn-lg rounded p-2">Shop Now</a>
+        </div>
+    </section>
+
+    <div class="row my-3"></div>
+
+    <section class="row mt-5 mb-5 min-height-section">
+        <div class="text-center">
+            <h1>Best Selling Products</h1>
+            <p>Elevate your experience!</p>
+        </div>
+        <div class="row my-3 mx-auto">
+            @if (topSellingItems != null && topSellingItems.Any())
+            {
+                foreach (var orderDetail in topSellingItems)
+                {
+                    <div class="col-md-4 my-3">
+                        <div class="card productcard h-100 mx-auto">
+                            <a href="ProductDetails?product=@orderDetail.Product.productName&id=@orderDetail.Product.Id" class="a-style-none">
+                                <img src="@orderDetail.Product.ImageUrl" class="card-img-top">
+                                <div class="card-body d-flex flex-column">
+                                    <h3 class="card-title mb-5 h-50 fw-bold">@orderDetail.Product.productName</h3>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="card-text mb-0 fw-bold">Php @orderDetail.Product.RetailPrice</p>
+                                        <p class="card-text mb-0">@orderDetail.Product.StockQuantity left</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <h4 class="text-center">No products to show</h4>
+            }
+        </div>
+    </section>
+
+    <div class="row my-5"></div>
+
+    <section class="row mt-5 mb-5 min-height-section">
+        <div class="text-center">
+            <h1>New Arrival Items</h1>
+        </div>
+        <div class="row my-3 mx-auto">
+            @if (ProductList != null && ProductList.Any())
+            {
+                @foreach (var product in ProductList.Take(12))
+                {
+                    <div class="col-md-3 my-3">
+                        <div class="card productcard h-100 mx-auto">
+                            <a href="ProductDetails?product=@product.productName&id=@product.Id" class="a-style-none">
+                                <img src="@product.ImageUrl" class="card-img-top">
+                                <div class="card-body d-flex flex-column">
+                                    <h3 class="card-title mb-5 h-50 fw-bold">@product.productName</h3>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="card-text mb-0 fw-bold">Php @product.RetailPrice</p>
+                                        <p class="card-text mb-0">@product.StockQuantity left</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <h3 class="text-center">No products to show</h3>
+            }
+        </div>
+    </section>
+
+    <br />
+</section>

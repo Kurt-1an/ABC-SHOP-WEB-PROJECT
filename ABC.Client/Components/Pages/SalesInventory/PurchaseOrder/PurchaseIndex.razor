@@ -1,0 +1,48 @@
+@using ABC.Shared.Models
+@using Layout
+@layout AdminLayout
+@page "/PurchaseOrders"
+
+<PageTitle>ABC - Purchase Orders</PageTitle>
+
+<section class="container pt-2 pb-5">
+    <div class="row pb-4">
+        <!-- Title -->
+        <div class="col-lg-8 col-sm-12 text-start mb-3 mb-sm-0">
+            <h1 style="color: #223442;"><b>Purchase Orders</b></h1>
+        </div>
+
+        <!-- Create Button -->
+        <div class="col-lg-2 col-sm-4 text-end mb-3 mb-sm-0">
+            <a href="CreatePO" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> Purchase Order
+            </a>
+        </div>
+
+        <!-- Export Button -->
+        <div class="col-lg-2 col-sm-4 text-end mb-3 mb-sm-0">
+            <a href="#" class="btn btn-success">
+                <i class="bi bi-box-arrow-up"></i> Export
+            </a>
+        </div>
+    </div>
+
+
+    <table id="tblpurchaseOrderData" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Supplier</th>
+                <th>Payment Term</th>
+                <th>Created On</th>
+                <th>Created By</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</section>
+
+<script src="/js/purchaseorder.js"></script>
+
+@code{
+    
+}
